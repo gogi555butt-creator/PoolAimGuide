@@ -167,6 +167,10 @@ class FloatingOverlayService : Service() {
             onCloseListener = {
                 hideOverlay()
             }
+            // After 2-point calibration, let touches pass to the game automatically
+            onCalibrationCompleteListener = {
+                setTouchPassThrough(true)
+            }
         }
     }
 
@@ -180,6 +184,9 @@ class FloatingOverlayService : Service() {
 
     private fun showOverlay() {
         if (!isOverlayVisible && overlayCanvasView != null) {
+            // Start in interactive calibration mode: tap cue ball, then target ball
+            overlayCanvasView?.tapCalibrationStep = 1
+            setTouchPassThrough(false)
             windowManager.addView(overlayCanvasView, overlayLayoutParams)
             isOverlayVisible = true
         }

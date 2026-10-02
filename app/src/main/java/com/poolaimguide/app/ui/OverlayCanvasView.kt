@@ -35,6 +35,9 @@ class OverlayCanvasView(context: Context) : View(context) {
     // Mode: 0 = Idle/Draggable, 1 = Tap Cue Ball, 2 = Tap Target Ball
     var tapCalibrationStep = 0
 
+    // Called when 2-point calibration finishes, so the host can enable touch pass-through
+    var onCalibrationCompleteListener: (() -> Unit)? = null
+
     // Paints
     private val paintAimLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -142,6 +145,7 @@ class OverlayCanvasView(context: Context) : View(context) {
                     targetBall.y = touchY
                     tapCalibrationStep = 0
                     invalidate()
+                    onCalibrationCompleteListener?.invoke()
                     return true
                 }
 
